@@ -9,7 +9,7 @@ router = Router()
 
 INFO_TEXT = (
     "📌 <b>Demo imtixan haqqında maǵlıwmat</b>\n\n"
-    "Bul demo imtixan bolıp, haqıyqıy kiriw imtixanı emes.\n\n"
+    "Bul demo imtixanı bolıp, haqıyqıy kiriw imtixanı emes.\n\n"
     "━━━━━━━━━━━━━━━━━━━━\n"
     "📚 <b>Imtixan quramı:</b>\n\n"
     "🔬 <b>30 test</b> — Science\n"
