@@ -235,6 +235,6 @@ async def cmd_stats(message: types.Message) -> None:
     await message.answer(
         f"📊 <b>Statistika</b>\n\n"
         f"👥 Jámi registraciya: <b>{count}</b>\n\n"
-        f"🌐 Tillar boyınsha:\n{lang_lines or '  —'}",
+        f"🌐 Tiller boyınsha:\n{lang_lines or '  —'}",
         parse_mode="HTML",
     )
