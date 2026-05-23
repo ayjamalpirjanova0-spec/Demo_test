@@ -16,11 +16,22 @@ async def create_tables() -> None:
                 telegram_id INTEGER UNIQUE NOT NULL,
                 ism         TEXT    NOT NULL,
                 familiya    TEXT    NOT NULL,
+                tuman       TEXT    NOT NULL,
+                maktab      TEXT    NOT NULL,
                 til         TEXT    NOT NULL,
                 telefon     TEXT    NOT NULL,
                 sana        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
+        # Eski bazaga yangi ustunlar qo'shish (migration)
+        try:
+            await db.execute("ALTER TABLE users ADD COLUMN tuman TEXT NOT NULL DEFAULT ''")
+        except Exception:
+            pass
+        try:
+            await db.execute("ALTER TABLE users ADD COLUMN maktab TEXT NOT NULL DEFAULT ''")
+        except Exception:
+            pass
         await db.commit()
     logger.info("✅ Database jadvallari tayyor.")
 
@@ -29,31 +40,27 @@ async def add_user(
     telegram_id: int,
     ism: str,
     familiya: str,
+    tuman: str,
+    maktab: str,
     til: str,
     telefon: str,
 ) -> bool:
-    """
-    Yangi foydalanuvchi qo'shadi.
-    Agar avval ro'yxatdan o'tgan bo'lsa — False qaytaradi.
-    """
     try:
         async with aiosqlite.connect(DATABASE_PATH) as db:
             await db.execute(
                 """
-                INSERT INTO users (telegram_id, ism, familiya, til, telefon)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO users (telegram_id, ism, familiya, tuman, maktab, til, telefon)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
-                (telegram_id, ism, familiya, til, telefon),
+                (telegram_id, ism, familiya, tuman, maktab, til, telefon),
             )
             await db.commit()
         return True
     except aiosqlite.IntegrityError:
-        # UNIQUE constraint — already registered
         return False
 
 
 async def get_user(telegram_id: int) -> Optional[tuple]:
-    """Bitta foydalanuvchini telegram_id bo'yicha qaytaradi."""
     async with aiosqlite.connect(DATABASE_PATH) as db:
         db.row_factory = aiosqlite.Row
         async with db.execute(
@@ -64,7 +71,6 @@ async def get_user(telegram_id: int) -> Optional[tuple]:
 
 
 async def get_all_users() -> list[tuple]:
-    """Barcha ro'yxatdan o'tganlarni qaytaradi (yangilar birinchi)."""
     async with aiosqlite.connect(DATABASE_PATH) as db:
         db.row_factory = aiosqlite.Row
         async with db.execute(
@@ -75,7 +81,6 @@ async def get_all_users() -> list[tuple]:
 
 
 async def get_users_count() -> int:
-    """Jami ro'yxatdan o'tganlar sonini qaytaradi."""
     async with aiosqlite.connect(DATABASE_PATH) as db:
         async with db.execute("SELECT COUNT(*) FROM users") as cursor:
             result = await cursor.fetchone()
