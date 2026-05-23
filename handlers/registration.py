@@ -227,7 +227,7 @@ async def _finish(message: types.Message, state: FSMContext, phone: str) -> None
         f"📞 Telefon:   <b>{phone}</b>\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
         "✅ Maǵlıwmatlarıńız saqlandı.\n"
-        "Demo imtixan waqtı haqqında keyinnen xabarlanadı.\n\n"
+        "Demo imtixan 2-iyun kúni 09:00de Mektebimizde bolıp ótedi.\n\n"
         "🌟 Áwmet yar bolsın!",
         reply_markup=main_menu_keyboard(),
         parse_mode="HTML",
